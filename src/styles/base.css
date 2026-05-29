@@ -185,9 +185,10 @@ img {
 
 .site-header .brand-name {
   font-family: var(--font-mark);
-  font-size: 1rem;
-  letter-spacing: 0.35em;
-  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  color: var(--ink);
   padding-left: 0.05em;
 }
 
