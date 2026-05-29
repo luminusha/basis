@@ -1,0 +1,52 @@
+---
+import { u } from '../../lib/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPapers, getPaperSessions, formatDate } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const papers = await getPapers();
+  return papers.map((p) => ({ params: { slug: p.slug }, props: { paper: p } }));
+}
+
+const { paper } = Astro.props;
+const sessions = await getPaperSessions(paper.slug);
+const { Content } = await paper.render();
+---
+<BaseLayout title={`${paper.data.title} · BASIS`}>
+  <article class="wrap">
+    <p class="meta">Paper</p>
+    <h1 style="margin-top:0.3rem;">{paper.data.title}</h1>
+    <div class="mono">
+      {paper.data.authors?.length > 0 && <span>{paper.data.authors.join(', ')}</span>}
+      {paper.data.year && <span> · {paper.data.year}</span>}
+      {paper.data.arxivId && <span> · arXiv:{paper.data.arxivId}</span>}
+    </div>
+    <p style="margin-top:var(--space-2);">
+      <a href={paper.data.url} rel="noopener">Read the paper →</a>
+    </p>
+    {paper.data.tldr && (
+      <blockquote>{paper.data.tldr}</blockquote>
+    )}
+    <div style="margin-top:0.5rem;">
+      {paper.data.tags?.map((t: string) => <span class="tag">{t}</span>)}
+    </div>
+
+    <Content />
+
+    {sessions.length > 0 && (
+      <section class="rule-top" style="margin-top:var(--space-4);">
+        <h2 style="margin-top:0;">Discussed in</h2>
+        <ul>
+          {sessions.map((s) => (
+            <li>
+              <a href={u(`/sessions/${s.slug}`)}>
+                BASIS {String(s.data.number).padStart(2, '0')}, {s.data.title}
+              </a>
+              <span class="dim"> · {formatDate(s.data.date)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>

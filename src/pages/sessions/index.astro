@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SessionCard from '../../components/SessionCard.astro';
+import { getSessions } from '../../lib/data';
+
+const sessions = await getSessions();
+---
+<BaseLayout title="Sessions · BASIS">
+  <div class="wrap">
+    <h1>Sessions</h1>
+    <p class="dim">
+      We meet every three weeks. Each session has a paper, a set of roles, and notes
+      contributed by the attendees. Older notes that read <em>pending</em> are open for any
+      member to PR.
+    </p>
+    <div style="margin-top:var(--space-4);">
+      {sessions.map((s) => <SessionCard session={s} />)}
+    </div>
+  </div>
+</BaseLayout>

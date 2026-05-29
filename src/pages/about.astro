@@ -1,0 +1,62 @@
+---
+import { u } from '../lib/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const roles = [
+  ['Discussion Generator', 'The engine of the conversation. Comes prepared with 2–3 open-ended, high-level questions that force people to take a stand or think beyond the text. Avoids yes/no questions.'],
+  ['Summarizer', 'Provides the "minimum viable knowledge" needed for discussion to kick off. Distills the entire paper into a 3–5 minute narrative, the why, the how, the so what. Sets the stage so even fuzzy readers can participate.'],
+  ['Highlighter', 'Picks 1–2 passages that deserve to be read aloud, the parts so profound, well-written, or controversial that they merit anchoring the discussion in the actual text.'],
+  ['Contrarian', 'Finds the cracks in the armor. Thinks like the skeptical reviewer looking for reasons to reject. Surfaces methodological flaws, over-extrapolated conclusions, hidden assumptions. Asks: "Is there a simpler explanation?" or "What would it take to prove this wrong?"'],
+  ['Concept Enricher', 'Picks 1–2 dense concepts (e.g. mech-interp, KL-divergence, a specific cited methodology) and explains them clearly. Ensures no one leaves the room confused by jargon.'],
+  ['Practical Applicationist', 'The grounded realist. Focuses on the "what now?" Brainstorms how findings could apply to engineering work, policy, or personal habits. For theoretical papers, proposes a toy model or follow-up experiment the group could actually run.'],
+  ['Bridge Builder', 'Looks outward. Connects this paper to previous readings or current interests in the AI safety space. Answers: "How does this change our worldview?"'],
+  ['Forecaster', 'Takes the paper\'s results and projects them onto future, more capable models or agent ecosystems. Presents a high-impact scaling hypothesis based on the data. Helps the group move from specific results to the general trajectory of the field.'],
+];
+---
+<BaseLayout title="About · BASIS">
+  <div class="wrap">
+    <h1>About</h1>
+
+    <p>
+      <strong>BASIS</strong> is an AI safety reading group based in Bangalore.
+      We meet roughly once every three weeks to read a paper closely and discuss it
+      in a structured format. About 12&ndash;15 members, 6&ndash;7 attending each session.
+    </p>
+
+    <p>
+      The format isn't a casual book club. Each attendee is assigned a <strong>role</strong>
+      before the session, with a specific kind of preparation expected. The roles
+      sum to a fuller reading than any one person could do alone.
+    </p>
+
+    <h2>Roles</h2>
+    <dl>
+      {roles.map(([name, desc]) => (
+        <>
+          <dt style="font-family:var(--font-sans);font-weight:600;letter-spacing:0.04em;margin-top:1rem;">{name}</dt>
+          <dd style="margin:0.3rem 0 0;color:var(--ink-mute);">{desc}</dd>
+        </>
+      ))}
+    </dl>
+
+    <h2>What we read</h2>
+    <p>
+      Papers across the technical AI safety landscape, mechanistic interpretability,
+      AI control, evals, alignment, emergent misalignment. We browse the
+      <a href={u("/papers")}>papers index</a> to see the canon as it's grown.
+    </p>
+
+    <h2>Tone</h2>
+    <p>
+      We're trying to read carefully and disagree well. The role-based format pushes
+      people to defend specific positions rather than soft consensus. We are not interested in
+      doom-takes, hype-takes, or status games. We <em>are</em> interested in being wrong out
+      loud and updating.
+    </p>
+
+    <h2>Want to join?</h2>
+    <p>
+      See <a href={u("/join")}>how to join</a>.
+    </p>
+  </div>
+</BaseLayout>

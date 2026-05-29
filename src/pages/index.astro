@@ -1,0 +1,67 @@
+---
+import { u } from '../lib/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SessionCard from '../components/SessionCard.astro';
+import Graph from '../components/Graph.astro';
+import { getSessions, getPapers, buildConceptGraph } from '../lib/data';
+
+const sessions = await getSessions();
+const papers = await getPapers();
+const recent = sessions.slice(0, 3);
+const concept = buildConceptGraph(sessions, papers);
+const conceptCount = concept.nodes.length;
+---
+<BaseLayout>
+  <section class="wrap" style="text-align:center;margin-top:var(--space-4);">
+    <img
+      src={u("/logo-full.svg")}
+      alt="BASIS"
+      style="width:176px;height:auto;margin:0 auto var(--space-2);display:block;"
+    />
+    <p class="dim" style="max-width:32rem;margin:0 auto;font-style:italic;">
+      A reading group on the technical foundations of AI safety,
+      meeting every three weeks in Bangalore.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="n">{sessions.length}</span>
+        <span class="l">Sessions</span>
+      </div>
+      <div class="stat">
+        <span class="n">{papers.length}</span>
+        <span class="l">Papers</span>
+      </div>
+      <div class="stat">
+        <span class="n">{conceptCount}</span>
+        <span class="l">Threads</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap-wide" style="margin-top:var(--space-4);">
+    <h2 style="text-align:center;font-size:var(--step-2);letter-spacing:0.04em;color:var(--ink-mute);font-weight:500;">
+      Concepts we keep returning to
+    </h2>
+    <Graph
+      id="concept-graph"
+      nodes={concept.nodes}
+      edges={concept.edges}
+      height={480}
+      emptyMessage="A few more sessions and the concept graph will start to bloom."
+    />
+    <p class="dim" style="text-align:center;font-size:0.85rem;">
+      Each node is a concept tagged on a session. Edges connect concepts that co-occurred.
+    </p>
+  </section>
+
+  <section class="wrap" style="margin-top:var(--space-5);">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;">
+      <h2 style="margin:0;">Recent sessions</h2>
+      <a href={u("/sessions")} class="meta">All sessions →</a>
+    </div>
+    <div style="margin-top:var(--space-3);">
+      {recent.map((s) => <SessionCard session={s} />)}
+    </div>
+  </section>
+</BaseLayout>

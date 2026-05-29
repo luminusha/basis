@@ -1,0 +1,68 @@
+---
+import { u } from '../../lib/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getMembers, getMemberStats, formatDate, roleLabel } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const members = await getMembers();
+  return members.map((m) => ({ params: { slug: m.slug }, props: { member: m } }));
+}
+
+const { member } = Astro.props;
+const stats = await getMemberStats(member.slug);
+const { Content } = await member.render();
+---
+<BaseLayout title={`${member.data.name} · BASIS`}>
+  <article class="wrap">
+    <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:var(--space-3);">
+      {member.data.github
+        ? <img src={`https://github.com/${member.data.github}.png?size=160`} alt="" style="width:80px;height:80px;border-radius:50%;border:1px solid var(--rule);" />
+        : <div style="width:80px;height:80px;border-radius:50%;border:1px solid var(--rule);background:var(--cream-soft);"></div>
+      }
+      <div>
+        <h1 style="margin:0;">{member.data.name}</h1>
+        {member.data.github && (
+          <p class="mono" style="margin:0;">
+            <a href={`https://github.com/${member.data.github}`} rel="noopener">@{member.data.github}</a>
+          </p>
+        )}
+        {member.data.site && (
+          <p class="mono" style="margin:0;"><a href={member.data.site} rel="noopener">{member.data.site}</a></p>
+        )}
+      </div>
+    </div>
+
+    {member.data.bio && <p class="dim" style="font-style:italic;">{member.data.bio}</p>}
+    <Content />
+
+    {stats && stats.rolesPlayed.length > 0 && (
+      <section class="rule-top" style="margin-top:var(--space-4);">
+        <h2 style="margin-top:0;">Roles played</h2>
+        <ul style="list-style:none;padding:0;">
+          {stats.rolesPlayed.map(({ role, session }) => (
+            <li style="margin-bottom:0.5rem;">
+              <span class="role">{roleLabel(role)}</span>
+              &nbsp;·&nbsp;
+              <a href={u(`/sessions/${session.slug}`)}>BASIS {String(session.data.number).padStart(2, '0')}</a>
+              <span class="dim"> · {formatDate(session.data.date)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {stats && stats.sessionsAttended.length > 0 && (
+      <section class="rule-top" style="margin-top:var(--space-3);">
+        <h2 style="margin-top:0;">Attended</h2>
+        <ul>
+          {stats.sessionsAttended.map((s) => (
+            <li>
+              <a href={u(`/sessions/${s.slug}`)}>BASIS {String(s.data.number).padStart(2, '0')}, {s.data.title}</a>
+              <span class="dim"> · {formatDate(s.data.date)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>

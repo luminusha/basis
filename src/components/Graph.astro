@@ -1,0 +1,143 @@
+---
+interface NodeIn {
+  id: string;
+  label: string;
+  weight: number;
+}
+interface EdgeIn {
+  source: string;
+  target: string;
+  weight?: number;
+}
+
+interface Props {
+  nodes: NodeIn[];
+  edges: EdgeIn[];
+  id?: string;
+  height?: number;
+  emptyMessage?: string;
+}
+
+const {
+  nodes,
+  edges,
+  id = 'graph',
+  height = 460,
+  emptyMessage = 'Not enough data yet, the graph will fill in as more sessions are added.',
+} = Astro.props;
+
+const isEmpty = nodes.length === 0;
+const elements = [
+  ...nodes.map((n) => ({ data: { id: n.id, label: n.label, weight: n.weight } })),
+  ...edges.map((e) => ({
+    data: { id: `${e.source}-${e.target}`, source: e.source, target: e.target, weight: e.weight ?? 1 },
+  })),
+];
+const json = JSON.stringify(elements);
+---
+
+{isEmpty ? (
+  <div class="graph" style={`height:${height}px;display:flex;align-items:center;justify-content:center;`}>
+    <p class="dim" style="text-align:center;max-width:24rem;">{emptyMessage}</p>
+  </div>
+) : (
+  <div id={id} class="graph" style={`height:${height}px;`} data-elements={json}></div>
+)}
+
+<script>
+  import cytoscape from 'cytoscape';
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('.graph[data-elements]').forEach((el) => {
+      if (el.dataset.initialized) return;
+      el.dataset.initialized = '1';
+      const raw = el.dataset.elements;
+      if (!raw) return;
+      const elements = JSON.parse(raw);
+      const cy = cytoscape({
+        container: el,
+        elements,
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'background-color': '#1a1714',
+              label: 'data(label)',
+              color: '#5c544a',
+              'font-family': 'Inter, sans-serif',
+              'font-size': 12,
+              'font-weight': 500,
+              'text-margin-y': -8,
+              'text-valign': 'top',
+              'text-halign': 'center',
+              width: 'mapData(weight, 1, 8, 10, 32)',
+              height: 'mapData(weight, 1, 8, 10, 32)',
+              'border-width': 1,
+              'border-color': '#d9c49e',
+            },
+          },
+          {
+            selector: 'node:active',
+            style: {
+              'overlay-color': '#a65e2e',
+              'overlay-opacity': 0.2,
+            },
+          },
+          {
+            selector: 'edge',
+            style: {
+              width: 'mapData(weight, 1, 6, 0.6, 2.4)',
+              'line-color': '#c9b289',
+              'curve-style': 'straight',
+              opacity: 0.6,
+            },
+          },
+        ],
+        layout: elements.length > 25
+          ? {
+              name: 'concentric',
+              animate: false,
+              padding: 40,
+              minNodeSpacing: 22,
+              concentric: (n: any) => n.data('weight') || 1,
+              levelWidth: () => 2,
+              spacingFactor: 1.1,
+            }
+          : {
+              name: 'cose',
+              animate: false,
+              padding: 60,
+              idealEdgeLength: () => 140,
+              nodeRepulsion: () => 24000,
+              gravity: 0.15,
+              numIter: 1500,
+              nodeOverlap: 30,
+              componentSpacing: 80,
+            },
+        wheelSensitivity: 0.2,
+        minZoom: 0.4,
+        maxZoom: 2.5,
+      });
+
+      cy.on('mouseover', 'node', (e) => {
+        e.target.style({ 'background-color': '#a65e2e', 'border-color': '#a65e2e', color: '#1a1714' });
+        el.style.cursor = 'pointer';
+      });
+      cy.on('mouseout', 'node', (e) => {
+        e.target.removeStyle();
+        el.style.cursor = '';
+      });
+      cy.on('tap', 'node', (e) => {
+        const id = e.target.id();
+        const link = document.querySelector<HTMLAnchorElement>(`a[data-paper-slug="${id}"]`);
+        if (link?.href) window.location.href = link.href;
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

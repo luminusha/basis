@@ -1,0 +1,91 @@
+---
+import { u } from '../lib/url';
+import '../styles/base.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = 'BASIS, an AI safety reading group',
+  description = 'An AI safety reading group meeting every three weeks in Bangalore. Notes, papers, and the threads between them.',
+  ogImage = '/logo.png',
+} = Astro.props;
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+const rawPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const pathname = (base && rawPath.startsWith(base) ? rawPath.slice(base.length) : rawPath) || '/';
+
+const nav = [
+  { href: '/', label: 'Index' },
+  { href: '/sessions', label: 'Sessions' },
+  { href: '/papers', label: 'Papers' },
+  { href: '/members', label: 'Members' },
+  { href: '/about', label: 'About' },
+  { href: '/join', label: 'Join' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href={u("/logo.svg")} />
+    <link rel="alternate icon" type="image/png" href={u("/logo.png")} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href={u("/")} class="brand">
+        <img src={u("/logo.svg")} alt="" />
+        <span class="brand-name">BASIS</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        {nav.map(({ href, label }) => {
+          const current = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          return (
+            <a href={u(href)} aria-current={current ? 'page' : undefined}>{label}</a>
+          );
+        })}
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        BASIS · Bangalore · meets every ~3 weeks
+      </div>
+      <div>
+        <a href="https://github.com/luminusha/basis">source</a>
+        &nbsp;·&nbsp;
+        <a href={u("/contribute")}>contribute</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.goatcounter.com" rel="noopener">stats</a>
+      </div>
+    </footer>
+
+    <!-- GoatCounter analytics: replace 'basis' below with the actual GoatCounter code once registered. -->
+    <script
+      data-goatcounter="https://basis.goatcounter.com/count"
+      async
+      src="https://gc.zgo.at/count.js"
+    ></script>
+  </body>
+</html>

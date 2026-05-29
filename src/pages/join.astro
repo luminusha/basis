@@ -1,0 +1,40 @@
+---
+import { u } from '../lib/url';
+import BaseLayout from '../layouts/BaseLayout.astro';
+// TODO: paste the Google Form URL here when ready.
+const FORM_URL = 'https://forms.gle/REPLACE-WITH-YOUR-FORM';
+---
+<BaseLayout title="Join · BASIS">
+  <div class="wrap">
+    <h1>Join</h1>
+
+    <p>
+      We're a small group, about a dozen members, six or seven attending each session.
+      We can comfortably grow to ~25 in the wider group and ~12 at any one meeting.
+      We add people slowly and deliberately.
+    </p>
+
+    <h2>What we look for</h2>
+    <ul>
+      <li>You read papers cover-to-cover, not abstracts.</li>
+      <li>You can show up in Bangalore every three weeks.</li>
+      <li>You'd enjoy playing a role (e.g. Contrarian, Bridge Builder) and prepping for it.</li>
+      <li>You're more curious than performative.</li>
+    </ul>
+
+    <h2>How to apply</h2>
+    <p>
+      Fill the form. We'll read it. If it feels like a fit, we'll invite you to a session.
+    </p>
+    <p>
+      <a href={FORM_URL} rel="noopener" style="font-size:1.1rem;">→ Application form</a>
+    </p>
+
+    <h2>If you're not sure yet</h2>
+    <p>
+      Browse the <a href={u("/sessions")}>sessions</a> and <a href={u("/papers")}>papers</a>.
+      If a session has notes marked <em>pending</em>, you can also contribute notes
+      yourself as a way of introducing your thinking, see <a href={u("/contribute")}>contribute</a>.
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+import { u } from '../lib/url';
+import type { Session } from '../lib/data';
+import { formatDate } from '../lib/data';
+
+interface Props { session: Session; }
+const { session } = Astro.props;
+const papers = session.data.papers ?? [];
+const tags = session.data.tags ?? [];
+const status = session.data.notesStatus;
+---
+
+<a href={u(`/sessions/${session.slug}`)} class="card-link">
+  <article class="card">
+    <div class="meta" style="display:flex;justify-content:space-between;margin-bottom:0.6rem;">
+      <span>BASIS · No. {String(session.data.number).padStart(2, '0')}</span>
+      <span>{formatDate(session.data.date)}</span>
+    </div>
+    <h3 style="margin:0 0 0.5rem;">{session.data.title}</h3>
+    {session.data.summary && <p class="dim" style="margin-bottom:0.6rem;">{session.data.summary}</p>}
+    <div>
+      {tags.map((t) => <span class="tag">{t}</span>)}
+    </div>
+    {status !== 'complete' && (
+      <p class="meta" style="margin-top:0.6rem;color:var(--ochre);">Notes {status}</p>
+    )}
+  </article>
+</a>

@@ -1,0 +1,27 @@
+---
+import { u } from '../../lib/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getMembers } from '../../lib/data';
+
+const members = await getMembers();
+---
+<BaseLayout title="Members · BASIS">
+  <div class="wrap-wide">
+    <h1>Members</h1>
+    <p class="dim">
+      The people who show up, read, and play roles.
+    </p>
+    <div class="member-grid" style="margin-top:var(--space-4);">
+      {members.map((m) => (
+        <a href={u(`/members/${m.slug}`)} class="member-card">
+          {m.data.github
+            ? <img src={`https://github.com/${m.data.github}.png?size=128`} alt="" />
+            : <div style="width:64px;height:64px;border-radius:50%;border:1px solid var(--rule);margin:0 auto var(--space-1);background:var(--cream);"></div>
+          }
+          <span class="name">{m.data.name}</span>
+          {m.data.github && <span class="gh">@{m.data.github}</span>}
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,70 @@
+---
+import { u } from '../../lib/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Graph from '../../components/Graph.astro';
+import { getPapers, getSessions, buildCitationWeb, formatDate } from '../../lib/data';
+
+const papers = await getPapers();
+const sessions = await getSessions();
+const web = buildCitationWeb(sessions, papers);
+
+const papersBySlug = new Map(papers.map((p) => [p.slug, p]));
+const sessionRefs = new Map<string, { date: Date; slug: string; number: number }[]>();
+for (const s of sessions) {
+  for (const r of s.data.papers ?? []) {
+    const slug = typeof r === 'string' ? r : (r as any).slug;
+    const arr = sessionRefs.get(slug) ?? [];
+    arr.push({ date: s.data.date, slug: s.slug, number: s.data.number });
+    sessionRefs.set(slug, arr);
+  }
+}
+---
+<BaseLayout title="Papers · BASIS">
+  <div class="wrap-wide">
+    <h1>Papers</h1>
+    <p class="dim">
+      Papers we've read, and the threads between them. The graph below is built from explicit
+      Bridge-Builder backreferences, when a later session linked the new paper to an earlier one.
+    </p>
+
+    <Graph
+      id="citation-web"
+      nodes={web.nodes}
+      edges={web.edges}
+      height={520}
+      emptyMessage="Once sessions start adding bridges to prior papers, the citation web will appear here."
+    />
+
+    <h2>All papers</h2>
+    <ul style="list-style:none;padding:0;">
+      {papers.map((p) => {
+        const refs = sessionRefs.get(p.slug) ?? [];
+        return (
+          <li class="card" style="margin-bottom:1rem;">
+            <a href={u(`/papers/${p.slug}`)} data-paper-slug={p.slug} style="font-family:var(--font-serif);font-size:1.15rem;border:0;">
+              {p.data.title}
+            </a>
+            <div class="mono" style="margin-top:0.3rem;">
+              {p.data.authors?.length > 0 && <span>{p.data.authors.join(', ')} · </span>}
+              {p.data.year && <span>{p.data.year}</span>}
+              {p.data.arxivId && <span> · arXiv:{p.data.arxivId}</span>}
+            </div>
+            <div style="margin-top:0.5rem;">
+              {p.data.tags?.map((t: string) => <span class="tag">{t}</span>)}
+            </div>
+            {refs.length > 0 && (
+              <p class="meta" style="margin-top:0.6rem;">
+                Discussed in: {refs.map((r, i) => (
+                  <>
+                    <a href={u(`/sessions/${r.slug}`)}>BASIS {String(r.number).padStart(2, '0')}</a>
+                    {i < refs.length - 1 ? ', ' : ''}
+                  </>
+                ))}
+              </p>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</BaseLayout>

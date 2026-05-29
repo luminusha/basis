@@ -1,0 +1,130 @@
+---
+import { u } from '../../lib/url';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Giscus from '../../components/Giscus.astro';
+import { getSessions, getMembers, getPapers, formatDate, roleLabel, ROLES } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const sessions = await getSessions();
+  return sessions.map((s) => ({ params: { slug: s.slug }, props: { session: s } }));
+}
+
+const { session } = Astro.props;
+const { Content } = await session.render();
+
+const members = await getMembers();
+const papers = await getPapers();
+const memberBySlug = new Map<string, typeof members[number]>(members.map((m) => [m.slug, m]));
+const paperBySlug = new Map<string, typeof papers[number]>(papers.map((p) => [p.slug, p]));
+
+const attendees = (session.data.attendees ?? [])
+  .map((r: any) => memberBySlug.get(typeof r === 'string' ? r : r.slug))
+  .filter(Boolean);
+
+const sessionPapers = (session.data.papers ?? [])
+  .map((r: any) => paperBySlug.get(typeof r === 'string' ? r : r.slug))
+  .filter(Boolean);
+
+const rolesEntries = ROLES
+  .map((role) => {
+    const r = (session.data.roles as Record<string, any>)?.[role];
+    if (!r) return null;
+    const memberSlug = typeof r === 'string' ? r : r.slug;
+    const m = memberBySlug.get(memberSlug);
+    return m ? { role, member: m } : null;
+  })
+  .filter(Boolean) as { role: string; member: any }[];
+---
+<BaseLayout title={`${session.data.title} · BASIS`} description={session.data.summary}>
+  <div class="session-layout">
+    <article>
+      <p class="meta">BASIS · No. {String(session.data.number).padStart(2, '0')} · {formatDate(session.data.date)}</p>
+      <h1 style="margin-top:0.3rem;">{session.data.title}</h1>
+      {session.data.summary && (
+        <p class="dim" style="font-size:1.1rem;font-style:italic;margin-bottom:var(--space-3);">
+          {session.data.summary}
+        </p>
+      )}
+      {session.data.notesStatus !== 'complete' && (
+        <div class="card" style="background:var(--cream);border-color:var(--ochre);">
+          <p class="role" style="margin-bottom:0.4rem;">Notes {session.data.notesStatus}</p>
+          <p style="margin:0;">
+            These notes are open for any member to claim. Edit
+            <code>src/content/sessions/{session.slug}.md</code> and open a PR.
+            See <a href={u("/contribute")}>how to contribute</a>.
+          </p>
+        </div>
+      )}
+      <Content />
+      <Giscus term={session.slug} />
+    </article>
+
+    <aside class="session-aside">
+      {sessionPapers.length > 0 && (
+        <>
+          <h4>Paper{sessionPapers.length > 1 ? 's' : ''}</h4>
+          <ul>
+            {sessionPapers.map((p: any) => (
+              <li><a href={u(`/papers/${p.slug}`)} data-paper-slug={p.slug}>{p.data.title}</a></li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {rolesEntries.length > 0 && (
+        <>
+          <h4>Roles</h4>
+          <ul>
+            {rolesEntries.map(({ role, member }) => (
+              <li>
+                <span class="role">{roleLabel(role)}</span><br/>
+                <a href={u(`/members/${member.slug}`)} class="attendee" style="margin-top:0.2rem;">
+                  {member.data.github && <img src={`https://github.com/${member.data.github}.png?size=44`} alt="" />}
+                  <span>{member.data.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {attendees.length > 0 && (
+        <>
+          <h4>Attended</h4>
+          <ul>
+            {attendees.map((m: any) => (
+              <li>
+                <a href={u(`/members/${m.slug}`)} class="attendee">
+                  {m.data.github && <img src={`https://github.com/${m.data.github}.png?size=44`} alt="" />}
+                  <span>{m.data.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {session.data.tags?.length > 0 && (
+        <>
+          <h4>Tags</h4>
+          <div>
+            {session.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+          </div>
+        </>
+      )}
+
+      {(session.data.bridgesTo ?? []).length > 0 && (
+        <>
+          <h4>Bridges to</h4>
+          <ul>
+            {(session.data.bridgesTo ?? []).map((slug: string) => {
+              const p = paperBySlug.get(slug);
+              if (p) return <li><a href={u(`/papers/${p.slug}`)}>{p.data.title}</a></li>;
+              return <li class="dim">{slug}</li>;
+            })}
+          </ul>
+        </>
+      )}
+    </aside>
+  </div>
+</BaseLayout>

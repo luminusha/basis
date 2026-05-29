@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const sessionTemplate = `---
+number: 6
+title: "Reading Group 6: <short title>"
+date: 2026-06-14
+notesStatus: complete
+attendees: [diksha, sumana, anusha]
+papers: [some-paper-slug]
+roles:
+  summarizer: anusha
+  contrarian: rohan
+  bridge-builder: diksha
+tags: ["mech-interp", "deception"]
+bridgesTo: ["emergent-misalignment"]
+summary: One-line hook describing the session.
+---
+
+## 1. Core Claims
+
+…
+
+## 2. Weaknesses
+
+…
+
+## 3. Discussion
+
+…
+`;
+
+const paperTemplate = `---
+title: "Paper Title"
+authors: ["Author A", "Author B"]
+url: https://arxiv.org/abs/...
+arxivId: "2501.12345"
+year: 2025
+tags: ["mech-interp"]
+tldr: One-sentence summary.
+---
+`;
+---
+<BaseLayout title="Contribute · BASIS">
+  <div class="wrap">
+    <h1>Contribute</h1>
+
+    <p>
+      Everything on this site is a Markdown file in a public repo. To add or edit notes,
+      open a pull request. The PR ritual <em>is</em> the membership ritual, if you've
+      written something worth merging, we want to read it.
+    </p>
+
+    <h2>Add notes for a session</h2>
+    <ol>
+      <li>Fork <a href="https://github.com/luminusha/basis">luminusha/basis</a>.</li>
+      <li>Edit the relevant <code>src/content/sessions/NNNN-*.md</code> file, replace the <em>pending</em> body with your notes.</li>
+      <li>Open a PR. We'll review and merge.</li>
+    </ol>
+
+    <h2>Add a new session</h2>
+    <p>Create a new file at <code>src/content/sessions/000N-slug.md</code> with this frontmatter:</p>
+    <pre><code>{sessionTemplate}</code></pre>
+
+    <h2>Add a new paper</h2>
+    <p>Create a file at <code>src/content/papers/slug.md</code>:</p>
+    <pre><code>{paperTemplate}</code></pre>
+
+    <h2>Add yourself as a member</h2>
+    <p>Create <code>src/content/members/&lt;your-slug&gt;.md</code>:</p>
+    <pre><code>{`---
+name: Your Name
+github: yourhandle
+bio: One-line bio (optional).
+---
+`}</code></pre>
+
+    <h2>Notes on tone</h2>
+    <ul>
+      <li>Be specific. Cite passages, not vibes.</li>
+      <li>If you contradict an earlier session's note, link to it (use the <code>bridgesTo</code> frontmatter).</li>
+      <li>It's fine for notes to be incomplete, pending notes are an invitation, not a blocker.</li>
+    </ul>
+  </div>
+</BaseLayout>
