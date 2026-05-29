@@ -2,11 +2,8 @@
 import { u } from '../lib/url';
 import { AFFILIATIONS } from '../lib/affiliations';
 
-const logoFor = (a: typeof AFFILIATIONS[number]) => {
-  if (a.logo) return u(a.logo);
-  if (a.clearbitDomain) return `https://logo.clearbit.com/${a.clearbitDomain}?size=200`;
-  return '';
-};
+const logoFor = (a: typeof AFFILIATIONS[number]) =>
+  a.logo ? u(a.logo) : '';
 ---
 
 <section class="wrap-wide affiliations">
