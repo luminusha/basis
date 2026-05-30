@@ -4,13 +4,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SessionCard from '../components/SessionCard.astro';
 import Graph from '../components/Graph.astro';
 import Affiliations from '../components/Affiliations.astro';
-import { getSessions, getPapers, buildConceptGraph } from '../lib/data';
+import { getSessions, getPapers, buildConceptGraph, getReadPaperSlugs } from '../lib/data';
 
 const sessions = await getSessions();
 const papers = await getPapers();
 const recent = sessions.slice(0, 3);
 const concept = buildConceptGraph(sessions, papers);
 const conceptCount = concept.nodes.length;
+const readCount = getReadPaperSlugs(sessions).size;
 ---
 <BaseLayout>
   <section class="wrap" style="text-align:center;margin-top:var(--space-4);">
@@ -31,8 +32,8 @@ const conceptCount = concept.nodes.length;
         <span class="l">Sessions</span>
       </div>
       <div class="stat">
-        <span class="n">{papers.length}</span>
-        <span class="l">Papers</span>
+        <span class="n">{readCount}</span>
+        <span class="l">Papers read</span>
       </div>
       <div class="stat">
         <span class="n">{conceptCount}</span>

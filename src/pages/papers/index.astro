@@ -2,13 +2,20 @@
 import { u } from '../../lib/url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Graph from '../../components/Graph.astro';
-import { getPapers, getSessions, buildCitationWeb, formatDate } from '../../lib/data';
+import {
+  getPapers,
+  getSessions,
+  buildCitationWeb,
+  partitionPapers,
+  getReadPaperSlugs,
+} from '../../lib/data';
 
 const papers = await getPapers();
 const sessions = await getSessions();
 const web = buildCitationWeb(sessions, papers);
+const readSlugs = getReadPaperSlugs(sessions);
+const { read, considered } = partitionPapers(papers, readSlugs);
 
-const papersBySlug = new Map(papers.map((p) => [p.slug, p]));
 const sessionRefs = new Map<string, { date: Date; slug: string; number: number }[]>();
 for (const s of sessions) {
   for (const r of s.data.papers ?? []) {
@@ -18,13 +25,18 @@ for (const s of sessions) {
     sessionRefs.set(slug, arr);
   }
 }
+
+function renderRefs(refs: { slug: string; number: number }[]) {
+  return refs;
+}
 ---
 <BaseLayout title="Papers · BASIS">
   <div class="wrap-wide">
     <h1>Papers</h1>
     <p class="dim">
-      Papers we've read, and the threads between them. The graph below is built from explicit
-      Bridge-Builder backreferences, when a later session linked the new paper to an earlier one.
+      What we've read, and what we've considered. The graph below shows only papers
+      we've actually discussed in a session; edges are explicit Bridge-Builder
+      backreferences from a later session to an earlier paper.
     </p>
 
     <Graph
@@ -35,36 +47,67 @@ for (const s of sessions) {
       emptyMessage="Once sessions start adding bridges to prior papers, the citation web will appear here."
     />
 
-    <h2>All papers</h2>
-    <ul style="list-style:none;padding:0;">
-      {papers.map((p) => {
-        const refs = sessionRefs.get(p.slug) ?? [];
-        return (
-          <li class="card" style="margin-bottom:1rem;">
-            <a href={u(`/papers/${p.slug}`)} data-paper-slug={p.slug} style="font-family:var(--font-serif);font-size:1.15rem;border:0;">
+    <h2>Read</h2>
+    <p class="dim" style="margin-top:-0.5rem;">
+      Papers we've discussed in a session.
+    </p>
+    {read.length === 0 ? (
+      <p class="dim"><em>No sessions have a paper assigned yet.</em></p>
+    ) : (
+      <ul style="list-style:none;padding:0;">
+        {read.map((p) => {
+          const refs = sessionRefs.get(p.slug) ?? [];
+          return (
+            <li class="card" style="margin-bottom:1rem;">
+              <a href={u(`/papers/${p.slug}`)} data-paper-slug={p.slug} style="font-family:var(--font-serif);font-size:1.15rem;border:0;">
+                {p.data.title}
+              </a>
+              <div class="mono" style="margin-top:0.3rem;">
+                {p.data.authors?.length > 0 && <span>{p.data.authors.join(', ')} · </span>}
+                {p.data.year && <span>{p.data.year}</span>}
+                {p.data.arxivId && <span> · arXiv:{p.data.arxivId}</span>}
+              </div>
+              <div style="margin-top:0.5rem;">
+                {p.data.tags?.map((t: string) => <span class="tag">{t}</span>)}
+              </div>
+              {refs.length > 0 && (
+                <p class="meta" style="margin-top:0.6rem;">
+                  Discussed in: {refs.map((r, i) => (
+                    <>
+                      <a href={u(`/sessions/${r.slug}`)}>BASIS {String(r.number).padStart(2, '0')}</a>
+                      {i < refs.length - 1 ? ', ' : ''}
+                    </>
+                  ))}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    )}
+
+    <h2 style="margin-top:var(--space-5);">Considered</h2>
+    <p class="dim" style="margin-top:-0.5rem;">
+      Papers the group surfaced and voted on, but didn't end up reading.
+      Worth keeping visible: the canon is shaped as much by what we pass on as by what we choose.
+    </p>
+    {considered.length === 0 ? (
+      <p class="dim"><em>Nothing waiting in the wings.</em></p>
+    ) : (
+      <ul style="list-style:none;padding:0;">
+        {considered.map((p) => (
+          <li class="card" style="margin-bottom:0.75rem;background:transparent;border-style:dashed;">
+            <a href={u(`/papers/${p.slug}`)} data-paper-slug={p.slug} style="font-family:var(--font-serif);font-size:1.05rem;border:0;color:var(--ink-mute);">
               {p.data.title}
             </a>
-            <div class="mono" style="margin-top:0.3rem;">
+            <div class="mono" style="margin-top:0.25rem;font-size:0.8em;color:var(--ink-faint);">
               {p.data.authors?.length > 0 && <span>{p.data.authors.join(', ')} · </span>}
               {p.data.year && <span>{p.data.year}</span>}
               {p.data.arxivId && <span> · arXiv:{p.data.arxivId}</span>}
             </div>
-            <div style="margin-top:0.5rem;">
-              {p.data.tags?.map((t: string) => <span class="tag">{t}</span>)}
-            </div>
-            {refs.length > 0 && (
-              <p class="meta" style="margin-top:0.6rem;">
-                Discussed in: {refs.map((r, i) => (
-                  <>
-                    <a href={u(`/sessions/${r.slug}`)}>BASIS {String(r.number).padStart(2, '0')}</a>
-                    {i < refs.length - 1 ? ', ' : ''}
-                  </>
-                ))}
-              </p>
-            )}
           </li>
-        );
-      })}
-    </ul>
+        ))}
+      </ul>
+    )}
   </div>
 </BaseLayout>

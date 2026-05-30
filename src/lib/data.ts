@@ -118,9 +118,10 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
   nodes: PaperNode[];
   edges: PaperEdge[];
 } {
-  const paperSet = new Set<string>(papers.map((p) => p.slug));
+  // Only papers we've actually read are nodes in the citation web.
+  const readSlugs = getReadPaperSlugs(sessions);
   const refCount = new Map<string, number>();
-  for (const p of papers) refCount.set(p.slug, 0);
+  for (const slug of readSlugs) refCount.set(slug, 0);
 
   const edges: PaperEdge[] = [];
   for (const s of sessions) {
@@ -131,7 +132,7 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
       refCount.set(sp, (refCount.get(sp) ?? 0) + 1);
     }
     for (const target of s.data.bridgesTo ?? []) {
-      if (!paperSet.has(target)) continue;
+      if (!readSlugs.has(target)) continue;
       for (const source of sessionPapers) {
         if (source === target) continue;
         edges.push({ source, target });
@@ -139,20 +140,8 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
     }
   }
 
-  const referenced = new Set<string>();
-  for (const e of edges) {
-    referenced.add(e.source);
-    referenced.add(e.target);
-  }
-  for (const s of sessions) {
-    for (const r of s.data.papers ?? []) {
-      const slug = typeof r === 'string' ? r : (r as any).slug;
-      referenced.add(slug);
-    }
-  }
-
   const nodes: PaperNode[] = papers
-    .filter((p) => referenced.has(p.slug))
+    .filter((p) => readSlugs.has(p.slug))
     .map((p) => ({
       id: p.slug,
       label: p.data.title,
@@ -198,4 +187,26 @@ export async function getPaperSessions(paperSlug: string): Promise<Session[]> {
       (typeof r === 'string' ? r : r.slug) === paperSlug,
     ),
   );
+}
+
+export function getReadPaperSlugs(sessions: Session[]): Set<string> {
+  const read = new Set<string>();
+  for (const s of sessions) {
+    for (const r of s.data.papers ?? []) {
+      read.add(typeof r === 'string' ? r : (r as any).slug);
+    }
+  }
+  return read;
+}
+
+export function partitionPapers(
+  papers: Paper[],
+  readSlugs: Set<string>,
+): { read: Paper[]; considered: Paper[] } {
+  const read: Paper[] = [];
+  const considered: Paper[] = [];
+  for (const p of papers) {
+    (readSlugs.has(p.slug) ? read : considered).push(p);
+  }
+  return { read, considered };
 }

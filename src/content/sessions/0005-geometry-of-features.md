@@ -4,7 +4,7 @@ title: "Reading Group 5: The Geometry of Features"
 date: 2026-05-24
 notesStatus: complete
 attendees: []
-papers: [not-all-features-linear]
+papers: [geometric-calculator]
 tags: ["mech-interp", "LRH", "manifolds", "deception", "interpretability"]
 bridgesTo: ["emergent-misalignment", "constitutional-classifiers", "agentic-misalignment"]
 summary: A geometric, manifold-based view of model features that pushes back on the Linear Representation Hypothesis.

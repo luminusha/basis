@@ -5,7 +5,7 @@ date: 2026-04-05
 notesStatus: pending
 attendees: []
 papers: [auditing-hidden-objectives]
-tags: ["auditing", "deception"]
+tags: ["auditing", "deception", "alignment"]
 ---
 
-Notes pending. The session focused on _Auditing Language Models for Hidden Objectives_ (highlighted in the suggested-papers slide).
+Notes pending. The session focused on _Auditing Language Models for Hidden Objectives_.
