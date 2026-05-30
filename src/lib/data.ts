@@ -112,6 +112,8 @@ export interface PaperNode {
 export interface PaperEdge {
   source: string;
   target: string;
+  weight?: number;
+  sharedTags?: string[];
 }
 
 export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
@@ -142,12 +144,17 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
     const aTags = new Set(a.data.tags ?? []);
     for (let j = i + 1; j < readPapers.length; j++) {
       const b = readPapers[j];
-      let shared = 0;
+      const shared: string[] = [];
       for (const t of b.data.tags ?? []) {
-        if (aTags.has(t)) shared++;
+        if (aTags.has(t)) shared.push(t);
       }
-      if (shared > 0) {
-        edges.push({ source: a.slug, target: b.slug, weight: shared });
+      if (shared.length > 0) {
+        edges.push({
+          source: a.slug,
+          target: b.slug,
+          weight: shared.length,
+          sharedTags: shared,
+        });
       }
     }
   }
