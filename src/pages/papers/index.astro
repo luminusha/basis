@@ -34,9 +34,9 @@ function renderRefs(refs: { slug: string; number: number }[]) {
   <div class="wrap-wide">
     <h1>Papers</h1>
     <p class="dim">
-      What we've read, and what we've considered. The graph below shows only papers
-      we've actually discussed in a session; edges are explicit Bridge-Builder
-      backreferences from a later session to an earlier paper.
+      What we've read, and what we've considered. The graph shows papers
+      we've actually discussed in a session; an edge connects two papers
+      that share at least one tag, and gets heavier the more tags they share.
     </p>
 
     <Graph

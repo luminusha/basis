@@ -123,7 +123,6 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
   const refCount = new Map<string, number>();
   for (const slug of readSlugs) refCount.set(slug, 0);
 
-  const edges: PaperEdge[] = [];
   for (const s of sessions) {
     const sessionPapers = (s.data.papers ?? []).map((r: any) =>
       typeof r === 'string' ? r : r.slug,
@@ -131,22 +130,33 @@ export function buildCitationWeb(sessions: Session[], papers: Paper[]): {
     for (const sp of sessionPapers) {
       refCount.set(sp, (refCount.get(sp) ?? 0) + 1);
     }
-    for (const target of s.data.bridgesTo ?? []) {
-      if (!readSlugs.has(target)) continue;
-      for (const source of sessionPapers) {
-        if (source === target) continue;
-        edges.push({ source, target });
+  }
+
+  const readPapers = papers.filter((p) => readSlugs.has(p.slug));
+
+  // Edges are derived from shared tags between read papers.
+  // Weight = number of tags they share.
+  const edges: PaperEdge[] = [];
+  for (let i = 0; i < readPapers.length; i++) {
+    const a = readPapers[i];
+    const aTags = new Set(a.data.tags ?? []);
+    for (let j = i + 1; j < readPapers.length; j++) {
+      const b = readPapers[j];
+      let shared = 0;
+      for (const t of b.data.tags ?? []) {
+        if (aTags.has(t)) shared++;
+      }
+      if (shared > 0) {
+        edges.push({ source: a.slug, target: b.slug, weight: shared });
       }
     }
   }
 
-  const nodes: PaperNode[] = papers
-    .filter((p) => readSlugs.has(p.slug))
-    .map((p) => ({
-      id: p.slug,
-      label: p.data.title,
-      weight: refCount.get(p.slug) ?? 0,
-    }));
+  const nodes: PaperNode[] = readPapers.map((p) => ({
+    id: p.slug,
+    label: p.data.title,
+    weight: refCount.get(p.slug) ?? 0,
+  }));
 
   return { nodes, edges };
 }
