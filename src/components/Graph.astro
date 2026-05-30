@@ -16,6 +16,8 @@ interface Props {
   id?: string;
   height?: number;
   emptyMessage?: string;
+  /** How aggressively to truncate displayed labels. Long titles will be ellipsised. */
+  labelMaxChars?: number;
 }
 
 const {
@@ -24,13 +26,31 @@ const {
   id = 'graph',
   height = 460,
   emptyMessage = 'Not enough data yet, the graph will fill in as more sessions are added.',
+  labelMaxChars = 28,
 } = Astro.props;
+
+function ellipsise(s: string, n: number): string {
+  if (s.length <= n) return s;
+  return s.slice(0, n - 1).trimEnd() + '…';
+}
 
 const isEmpty = nodes.length === 0;
 const elements = [
-  ...nodes.map((n) => ({ data: { id: n.id, label: n.label, weight: n.weight } })),
+  ...nodes.map((n) => ({
+    data: {
+      id: n.id,
+      label: ellipsise(n.label, labelMaxChars),
+      fullLabel: n.label,
+      weight: n.weight,
+    },
+  })),
   ...edges.map((e) => ({
-    data: { id: `${e.source}-${e.target}`, source: e.source, target: e.target, weight: e.weight ?? 1 },
+    data: {
+      id: `${e.source}-${e.target}`,
+      source: e.source,
+      target: e.target,
+      weight: e.weight ?? 1,
+    },
   })),
 ];
 const json = JSON.stringify(elements);
@@ -54,6 +74,45 @@ const json = JSON.stringify(elements);
       const raw = el.dataset.elements;
       if (!raw) return;
       const elements = JSON.parse(raw);
+      const nodeCount = elements.filter((e: any) => !e.data.source).length;
+
+      // Pick a layout that suits the data density.
+      // - very small graphs (<= 8 nodes): even circle, predictable spacing
+      // - medium graphs: cose, lets edges pull related nodes together
+      // - large graphs (> 25 nodes): concentric, hubs in the center
+      let layout: any;
+      if (nodeCount <= 8) {
+        layout = {
+          name: 'circle',
+          animate: false,
+          padding: 80,
+          spacingFactor: 1.4,
+          radius: undefined,
+        };
+      } else if (nodeCount > 25) {
+        layout = {
+          name: 'concentric',
+          animate: false,
+          padding: 40,
+          minNodeSpacing: 28,
+          concentric: (n: any) => n.data('weight') || 1,
+          levelWidth: () => 2,
+          spacingFactor: 1.1,
+        };
+      } else {
+        layout = {
+          name: 'cose',
+          animate: false,
+          padding: 60,
+          idealEdgeLength: () => 160,
+          nodeRepulsion: () => 32000,
+          gravity: 0.15,
+          numIter: 1500,
+          nodeOverlap: 40,
+          componentSpacing: 100,
+        };
+      }
+
       const cy = cytoscape({
         container: el,
         elements,
@@ -63,15 +122,19 @@ const json = JSON.stringify(elements);
             style: {
               'background-color': '#1a1714',
               label: 'data(label)',
-              color: '#5c544a',
+              color: '#3a322a',
               'font-family': 'Inter, sans-serif',
-              'font-size': 12,
+              'font-size': nodeCount <= 8 ? 13 : 12,
               'font-weight': 500,
-              'text-margin-y': -8,
+              'text-margin-y': -10,
               'text-valign': 'top',
               'text-halign': 'center',
-              width: 'mapData(weight, 1, 8, 10, 32)',
-              height: 'mapData(weight, 1, 8, 10, 32)',
+              'text-background-color': '#faf3e1',
+              'text-background-opacity': 0.92,
+              'text-background-padding': 4,
+              'text-background-shape': 'roundrectangle',
+              width: nodeCount <= 8 ? 16 : 'mapData(weight, 1, 8, 10, 32)',
+              height: nodeCount <= 8 ? 16 : 'mapData(weight, 1, 8, 10, 32)',
               'border-width': 1,
               'border-color': '#d9c49e',
             },
@@ -86,41 +149,36 @@ const json = JSON.stringify(elements);
           {
             selector: 'edge',
             style: {
-              width: 'mapData(weight, 1, 6, 0.6, 2.4)',
-              'line-color': '#c9b289',
+              width: 'mapData(weight, 1, 6, 1.2, 3)',
+              'line-color': '#a65e2e',
               'curve-style': 'straight',
-              opacity: 0.6,
+              opacity: 0.45,
             },
           },
         ],
-        layout: elements.length > 25
-          ? {
-              name: 'concentric',
-              animate: false,
-              padding: 40,
-              minNodeSpacing: 22,
-              concentric: (n: any) => n.data('weight') || 1,
-              levelWidth: () => 2,
-              spacingFactor: 1.1,
-            }
-          : {
-              name: 'cose',
-              animate: false,
-              padding: 60,
-              idealEdgeLength: () => 140,
-              nodeRepulsion: () => 24000,
-              gravity: 0.15,
-              numIter: 1500,
-              nodeOverlap: 30,
-              componentSpacing: 80,
-            },
+        layout,
         wheelSensitivity: 0.2,
         minZoom: 0.4,
         maxZoom: 2.5,
+        userZoomingEnabled: false,
+        userPanningEnabled: false,
       });
 
+      // Keep the graph fitted as the container is sized.
+      const fit = () => cy.fit(undefined, 40);
+      fit();
+      const ro = new ResizeObserver(fit);
+      ro.observe(el);
+
       cy.on('mouseover', 'node', (e) => {
-        e.target.style({ 'background-color': '#a65e2e', 'border-color': '#a65e2e', color: '#1a1714' });
+        e.target.style({
+          'background-color': '#a65e2e',
+          'border-color': '#a65e2e',
+          color: '#1a1714',
+          'font-weight': 600,
+          label: e.target.data('fullLabel'),
+          'z-index': 999,
+        });
         el.style.cursor = 'pointer';
       });
       cy.on('mouseout', 'node', (e) => {
