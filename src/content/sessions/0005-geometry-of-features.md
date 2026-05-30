@@ -1,6 +1,6 @@
 ---
 number: 5
-title: "Reading Group 5: The Geometry of Features"
+title: "Reading Group 5: A Geometric Calculator Inside a Neural Network"
 date: 2026-05-24
 notesStatus: complete
 attendees: []

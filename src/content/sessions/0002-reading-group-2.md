@@ -1,6 +1,6 @@
 ---
 number: 2
-title: "Reading Group 2"
+title: "Reading Group 2: The Assistant Axis"
 date: 2026-03-15
 notesStatus: pending
 attendees: []

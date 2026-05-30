@@ -1,6 +1,6 @@
 ---
 number: 4
-title: "Reading Group 4"
+title: "Reading Group 4: Towards Guaranteed Safe AI"
 date: 2026-04-26
 notesStatus: pending
 attendees: []

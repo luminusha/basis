@@ -1,6 +1,6 @@
 ---
 number: 3
-title: "Reading Group 3"
+title: "Reading Group 3: Auditing Language Models for Hidden Objectives"
 date: 2026-04-05
 notesStatus: pending
 attendees: []
