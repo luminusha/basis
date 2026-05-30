@@ -3,30 +3,43 @@ interface Props {
   term: string;
 }
 const { term } = Astro.props;
-// Replace `repo`, `repoId`, `category`, `categoryId` with values from https://giscus.app
-// once the GitHub repo + Discussions are set up.
+
+// Once giscus is installed on the repo and you have the IDs from
+// https://giscus.app, paste them here and the comments section will
+// activate automatically. While these are placeholders the section
+// stays hidden so the page doesn't show a broken-widget error.
+const REPO = 'luminusha/basis';
+const REPO_ID = 'REPLACE_REPO_ID';
+const CATEGORY = 'Session Comments';
+const CATEGORY_ID = 'REPLACE_CATEGORY_ID';
+
+const configured =
+  REPO_ID && !REPO_ID.startsWith('REPLACE') &&
+  CATEGORY_ID && !CATEGORY_ID.startsWith('REPLACE');
 ---
 
-<section class="giscus-wrap" style="margin-top:var(--space-5);">
-  <h3 style="font-size:1.1rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-mute);font-weight:500;">Comments</h3>
-  <p class="dim" style="font-size:0.9rem;margin-bottom:1rem;">
-    Comments are powered by GitHub Discussions. Sign in with your GitHub account to add to the thread.
-  </p>
-  <script
-    src="https://giscus.app/client.js"
-    data-repo="luminusha/basis"
-    data-repo-id="REPLACE_REPO_ID"
-    data-category="Session Comments"
-    data-category-id="REPLACE_CATEGORY_ID"
-    data-mapping="specific"
-    data-term={term}
-    data-strict="1"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="light"
-    data-lang="en"
-    crossorigin="anonymous"
-    async
-  ></script>
-</section>
+{configured && (
+  <section class="giscus-wrap" style="margin-top:var(--space-5);">
+    <h3 style="font-size:1.1rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--ink-mute);font-weight:500;">Comments</h3>
+    <p class="dim" style="font-size:0.9rem;margin-bottom:1rem;">
+      Comments are powered by GitHub Discussions. Sign in with your GitHub account to add to the thread.
+    </p>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo={REPO}
+      data-repo-id={REPO_ID}
+      data-category={CATEGORY}
+      data-category-id={CATEGORY_ID}
+      data-mapping="specific"
+      data-term={term}
+      data-strict="1"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="light"
+      data-lang="en"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </section>
+)}
