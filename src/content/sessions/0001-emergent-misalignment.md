@@ -14,6 +14,7 @@ roles:
   practical-applicationist: maheep
 tags: ["alignment", "fine-tuning", "misalignment"]
 bridgesTo: []
+summary: How narrow harmful fine-tuning (e.g. insecure code) can induce broad, cross-domain misalignment, and what that says about how aligned behaviour is structured.
 ---
 
 ## Before the discussion

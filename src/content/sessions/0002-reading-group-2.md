@@ -6,6 +6,7 @@ notesStatus: partial
 attendees: []
 papers: [assistant-axis]
 tags: ["assistant", "persona", "alignment", "mech-interp"]
+summary: Locating the assistant persona as a direction in activation space, and what it takes to keep a model tethered to it under drift.
 ---
 
 ## Adjacent reading the group surfaced
