@@ -45,13 +45,21 @@ const rolesEntries = ROLES
           {session.data.summary}
         </p>
       )}
-      {session.data.notesStatus !== 'complete' && (
+      {session.data.notesStatus === 'pending' && (
         <div class="card" style="background:var(--cream);border-color:var(--ochre);">
-          <p class="role" style="margin-bottom:0.4rem;">Notes {session.data.notesStatus}</p>
+          <p class="role" style="margin-bottom:0.4rem;">Notes pending</p>
           <p style="margin:0;">
             These notes are open for any member to claim. Edit
             <code>src/content/sessions/{session.slug}.md</code> and open a PR.
             See <a href={u("/contribute")}>how to contribute</a>.
+          </p>
+        </div>
+      )}
+      {session.data.notesStatus === 'upcoming' && (
+        <div class="card" style="background:var(--cream);border-color:var(--ochre);">
+          <p class="role" style="margin-bottom:0.4rem;">Upcoming</p>
+          <p style="margin:0;">
+            This session is scheduled for {formatDate(session.data.date)}. Notes will be posted here afterwards.
           </p>
         </div>
       )}

@@ -17,7 +17,7 @@ const sessions = defineCollection({
     number: z.number().int().positive(),
     title: z.string(),
     date: z.date(),
-    notesStatus: z.enum(['complete', 'partial', 'pending']).default('pending'),
+    notesStatus: z.enum(['complete', 'partial', 'pending', 'upcoming']).default('pending'),
     attendees: z.array(reference('members')).default([]),
     papers: z.array(reference('papers')).default([]),
     roles: z.record(z.enum(ROLES), reference('members')).default({}),
