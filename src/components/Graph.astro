@@ -126,9 +126,9 @@ const json = JSON.stringify(elements);
               label: 'data(label)',
               color: '#3a322a',
               'font-family': 'Inter, sans-serif',
-              'font-size': nodeCount <= 8 ? 16 : 14,
+              'font-size': nodeCount <= 8 ? 19 : 15,
               'font-weight': 500,
-              'text-margin-y': -12,
+              'text-margin-y': -14,
               'text-valign': 'top',
               'text-halign': 'center',
               'text-background-opacity': 0,
@@ -174,10 +174,10 @@ const json = JSON.stringify(elements);
         userPanningEnabled: false,
       });
 
-      // Keep the graph fitted as the container is sized.
-      // Pad generously so node labels (which extend beyond the node bounding
-      // box) don't get clipped at the canvas edge.
-      const fit = () => cy.fit(undefined, 140);
+      // Keep the graph fitted as the container is sized. Pad enough that
+      // node labels (which extend beyond the node bounding box) don't clip
+      // at the canvas edge, but not so much that the graph shrinks away.
+      const fit = () => cy.fit(undefined, 90);
       fit();
       const ro = new ResizeObserver(fit);
       ro.observe(el);
