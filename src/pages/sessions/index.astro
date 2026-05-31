@@ -11,7 +11,7 @@ const sessions = await getSessions();
     <p class="dim">
       We're a high-participation reading group, meeting in person in Bangalore.
       Each session has a paper, a set of roles, and notes contributed by the
-      attendees. Older notes that read <em>pending</em> are open for any member to PR.
+      attendees. Anyone can PR additions or edits to any session's notes.
     </p>
     <div style="margin-top:var(--space-4);">
       {sessions.map((s) => <SessionCard session={s} />)}
