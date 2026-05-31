@@ -175,7 +175,9 @@ const json = JSON.stringify(elements);
       });
 
       // Keep the graph fitted as the container is sized.
-      const fit = () => cy.fit(undefined, 40);
+      // Pad generously so node labels (which extend beyond the node bounding
+      // box) don't get clipped at the canvas edge.
+      const fit = () => cy.fit(undefined, 140);
       fit();
       const ro = new ResizeObserver(fit);
       ro.observe(el);
