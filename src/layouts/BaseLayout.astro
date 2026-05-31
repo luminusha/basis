@@ -50,9 +50,9 @@ const nav = [
   </head>
   <body>
     <header class="site-header">
-      <a href={u("/")} class="brand">
-        <img src={u("/logo.svg")} alt="" />
-        <span class="brand-name">BASIS</span>
+      <a href={u("/")} class="brand" aria-label="BASIS">
+        <img src={u("/logo.svg")} alt="" class="brand-mark" />
+        <img src={u("/logo-wordmark.svg")} alt="BASIS" class="brand-wordmark" />
       </a>
       <nav class="site-nav" aria-label="Primary">
         {nav.map(({ href, label }) => {

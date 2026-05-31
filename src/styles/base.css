@@ -177,19 +177,16 @@ img {
   color: var(--ink);
 }
 
-.site-header .brand img {
+.site-header .brand-mark {
   width: 32px;
   height: 32px;
   display: block;
 }
 
-.site-header .brand-name {
-  font-family: var(--font-mark);
-  font-size: 1.25rem;
-  letter-spacing: 0.22em;
-  font-weight: 500;
-  color: var(--ink);
-  padding-left: 0.05em;
+.site-header .brand-wordmark {
+  height: 16px;
+  width: auto;
+  display: block;
 }
 
 .site-nav {
