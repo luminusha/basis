@@ -21,8 +21,11 @@ const status = session.data.notesStatus;
     <div>
       {tags.map((t) => <span class="tag">{t}</span>)}
     </div>
-    {status !== 'complete' && (
-      <p class="meta" style="margin-top:0.6rem;color:var(--ochre);">Notes {status}</p>
+    {status === 'pending' && (
+      <p class="meta" style="margin-top:0.6rem;color:var(--ochre);">Notes pending</p>
+    )}
+    {status === 'partial' && (
+      <p class="meta" style="margin-top:0.6rem;color:var(--ochre);">Notes</p>
     )}
   </article>
 </a>
