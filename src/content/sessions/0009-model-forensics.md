@@ -61,7 +61,7 @@ The interventions include activation steering, ablation and interchange. We read
 
 ## Research pilot
 
-Over lunch, Sanchayan informally shared the research project he is driving, on the application of JLens to sycophancy in language models. It is a small research pilot running within BASIS.
+Over lunch, Sanchayan informally shared the research project he is driving, on the application of J-Lens to sycophancy in language models. J-Lens comes from [_A Global Workspace in Language Models_](/basis/papers/global-workspace), the paper we went through in [session 8](/basis/sessions/0008-global-workspace-deep-dive/). It is a small research pilot running within BASIS.
 
 ## Polls
 
