@@ -61,12 +61,7 @@ The interventions include activation steering, ablation and interchange. We read
 
 ## Research pilot
 
-Sanchayan took the longest slot on the agenda for the BASIS research pilot, covering:
-
-- His research question.
-- The experiments he has run.
-- Where they currently stand.
-- What he plans next.
+Over lunch, Sanchayan informally shared the research project he is driving, on the application of JLens to sycophancy in language models. It is a small research pilot running within BASIS.
 
 ## Polls
 
