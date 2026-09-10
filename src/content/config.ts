@@ -2,11 +2,13 @@ import { defineCollection, z, reference } from 'astro:content';
 
 const ROLES = [
   'summarizer',
+  'methodology-mapper',
   'concept-enricher',
   'highlighter',
   'contrarian',
-  'bridge-builder',
   'discussion-generator',
+  'experiment-designer',
+  'bridge-builder',
   'practical-applicationist',
   'forecaster',
 ] as const;
