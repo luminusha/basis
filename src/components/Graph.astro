@@ -86,17 +86,28 @@ const json = JSON.stringify(elements);
       // - small graphs (<= 15 nodes): even circle, predictable spacing
       // - medium graphs: cose, lets edges pull related nodes together
       // - large graphs (> 25 nodes): concentric, hubs in the center
+      const SMALL_FONT = 22;
       let layout: any;
       if (small) {
-        // Explicit, compact radius. If the circle is sized from the
-        // container, the labels push the bounding box well past it and
-        // fit() zooms everything down to ~0.45, which is what makes the
-        // labels unreadable. A tight circle lets fit() stay near zoom 1.
+        // Labels sit above their node (Cytoscape's default). Non-default
+        // alignments have a bounding-box bug that clips the text, so we
+        // avoid them and instead size the circle so that the two labels
+        // flanking the top node can't overlap. Their horizontal gap is
+        // 2R·sin(2π/n), so R is derived from the widest label. Sized
+        // this way the graph stays close to zoom 1 and fit() doesn't
+        // shrink the labels into illegibility.
+        const ctx = document.createElement('canvas').getContext('2d')!;
+        ctx.font = `500 ${SMALL_FONT}px Inter, sans-serif`;
+        const maxLabelW = Math.max(
+          ...elements.filter((e: any) => !e.data.source).map((e: any) => ctx.measureText(e.data.label).width),
+        );
+        const gap = 24;
+        const radius = Math.max(150, (maxLabelW + gap) / (2 * Math.sin((2 * Math.PI) / nodeCount)));
         layout = {
           name: 'circle',
           animate: false,
           padding: 40,
-          radius: Math.min(el.clientWidth, el.clientHeight) * 0.27,
+          radius,
         };
       } else if (nodeCount > 25) {
         layout = {
@@ -136,9 +147,9 @@ const json = JSON.stringify(elements);
               'text-events': 'yes',
               color: '#3a322a',
               'font-family': 'Inter, sans-serif',
-              'font-size': small ? 22 : 16,
+              'font-size': small ? SMALL_FONT : 16,
               'font-weight': 500,
-              'text-margin-y': -16,
+              'text-margin-y': -12,
               'text-valign': 'top',
               'text-halign': 'center',
               'text-background-opacity': 0,
@@ -146,17 +157,6 @@ const json = JSON.stringify(elements);
               height: small ? 18 : 'mapData(weight, 1, 8, 12, 34)',
               'border-width': 1,
               'border-color': '#d9c49e',
-            },
-          },
-          {
-            // Radial label placement for the circle layout: set as data so
-            // it lives in the stylesheet and survives removeStyle() on hover.
-            selector: 'node[halign]',
-            style: {
-              'text-halign': 'data(halign)',
-              'text-valign': 'data(valign)',
-              'text-margin-x': 'data(mx)',
-              'text-margin-y': 'data(my)',
             },
           },
           {
@@ -194,30 +194,6 @@ const json = JSON.stringify(elements);
         userZoomingEnabled: false,
         userPanningEnabled: false,
       });
-
-      // On the circle layout, point each label away from the centre so
-      // neighbours don't stack on top of each other. Nodes on the left
-      // get their label to the left, top nodes above, and so on.
-      if (small) {
-        const bb = cy.nodes().boundingBox();
-        const cx = (bb.x1 + bb.x2) / 2;
-        const cyy = (bb.y1 + bb.y2) / 2;
-        const eps = Math.max(bb.w, bb.h) * 0.12;
-        const gap = 10;
-        cy.nodes().forEach((n) => {
-          const { x, y } = n.position();
-          const dx = x - cx;
-          const dy = y - cyy;
-          const halign = dx < -eps ? 'left' : dx > eps ? 'right' : 'center';
-          const valign = dy < -eps ? 'top' : dy > eps ? 'bottom' : 'center';
-          n.data({
-            halign,
-            valign,
-            mx: halign === 'left' ? -gap : halign === 'right' ? gap : 0,
-            my: valign === 'top' ? -gap : valign === 'bottom' ? gap : 0,
-          });
-        });
-      }
 
       // Keep the graph fitted as the container is sized. Labels scale with
       // zoom, so cap it at 1: a graph that fits with room to spare should
