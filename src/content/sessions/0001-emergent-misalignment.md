@@ -65,4 +65,4 @@ The Highlighter's role is to identify, and read aloud, the "soul" of the paper. 
 
 ---
 
-_Summariser, Concept Enricher, Contrarian, and Practical Applicationist sections are still to be filled in, any attendee can [PR them](/basis/contribute/)._
+_Summariser, Concept Enricher, Contrarian, and Practical Applicationist sections are still to be filled in, any attendee can [PR them](/contribute/)._

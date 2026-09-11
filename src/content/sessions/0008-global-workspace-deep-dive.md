@@ -9,7 +9,7 @@ tags: ["mech-interp", "interpretability", "monitoring", "cognition"]
 summary: "A follow-up to session 7: instead of re-reading the paper, we dug into the code and the Neuronpedia demo to see the Global Workspace idea in action on Gemma."
 ---
 
-A smaller, hands-on follow-up to [session 7](/basis/sessions/0007-global-workspace/) on Anthropic's [_A Global Workspace in Language Models_](https://www.anthropic.com/research/global-workspace). Instead of re-reading the paper, the session was a walkthrough of two artefacts that make the paper concrete.
+A smaller, hands-on follow-up to [session 7](/sessions/0007-global-workspace/) on Anthropic's [_A Global Workspace in Language Models_](https://www.anthropic.com/research/global-workspace). Instead of re-reading the paper, the session was a walkthrough of two artefacts that make the paper concrete.
 
 ## Kaggle notebook: Gemma 4 MHA mech interp
 

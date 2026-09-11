@@ -2,8 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: 'https://luminusha.github.io',
-  base: '/basis',
+  site: 'https://basisresearch.org',
   trailingSlash: 'ignore',
   integrations: [mdx()],
   markdown: {

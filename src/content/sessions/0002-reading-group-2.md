@@ -43,4 +43,4 @@ summary: Locating the assistant persona as a direction in activation space, and 
 
 ---
 
-_Discussion Generator, Summarizer, Highlighter, Contrarian, Concept Enricher, Practical Applicationist, and Bridge Builder sections are still to be filled in, any attendee can [PR them](/basis/contribute/)._
+_Discussion Generator, Summarizer, Highlighter, Contrarian, Concept Enricher, Practical Applicationist, and Bridge Builder sections are still to be filled in, any attendee can [PR them](/contribute/)._

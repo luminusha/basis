@@ -57,11 +57,11 @@ Over twelve weeks her mentees will test three things:
 - Whether that direction causally drives the hiding behaviour.
 - How it relates to other persona vectors.
 
-The interventions include activation steering, ablation and interchange. We read the assistant axis paper in [session 2](/basis/sessions/0002-reading-group-2/).
+The interventions include activation steering, ablation and interchange. We read the assistant axis paper in [session 2](/sessions/0002-reading-group-2/).
 
 ## Research pilot
 
-Over lunch, Sanchayan informally shared the research project he is driving, on the application of J-Lens to sycophancy in language models. J-Lens comes from [_A Global Workspace in Language Models_](/basis/papers/global-workspace), which we read in [session 7](/basis/sessions/0007-global-workspace/) and took a hands-on look at in [session 8](/basis/sessions/0008-global-workspace-deep-dive/). It is a small research pilot running within BASIS.
+Over lunch, Sanchayan informally shared the research project he is driving, on the application of J-Lens to sycophancy in language models. J-Lens comes from [_A Global Workspace in Language Models_](/papers/global-workspace), which we read in [session 7](/sessions/0007-global-workspace/) and took a hands-on look at in [session 8](/sessions/0008-global-workspace-deep-dive/). It is a small research pilot running within BASIS.
 
 ## Polls
 
