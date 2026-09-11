@@ -262,19 +262,16 @@ const json = JSON.stringify(elements);
         if (link?.href) window.location.href = link.href;
       });
 
-      // Edge hover: the papers graph shows the tags two papers share; the
-      // concept graph shows how many times two concepts co-occurred.
+      // Edge hover: the papers graph shows the tags two papers share.
+      // Concept edges carry no tags and stay quiet; a count label there
+      // was tried and read as clutter.
       cy.on('mouseover', 'edge', (e) => {
         const edge = e.target;
         const tags = edge.data('sharedTags') as string[] | undefined;
-        const w = edge.data('weight') || 1;
-        const label =
-          tags && tags.length > 0
-            ? tags.join('  ·  ')
-            : `${w} co-occurrence${w === 1 ? '' : 's'}`;
+        if (!tags || tags.length === 0) return;
         edge.addClass('hot');
         edge.style({
-          label,
+          label: tags.join('  ·  '),
           'text-background-opacity': 1,
           'text-border-opacity': 1,
         });
