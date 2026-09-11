@@ -19,7 +19,7 @@ bridgesTo: ["assistant-axis", "reasoning-faithfulness"]
 summary: "Detecting concerning behaviour does not establish misalignment. The paper proposes a protocol for investigating what drove the behaviour."
 ---
 
-Hosted at the [Secure AI Futures Lab](https://secureaifutureslab.substack.com/) (SAFL) in Bengaluru, which describes itself as the first India-based research and capacity-building lab for trustworthy AI. About four hours on the paper, followed by office hours. The Experiment Designer slot was unassigned on the day and is still open.
+Hosted at the [Secure AI Futures Lab](https://secureaifutureslab.substack.com/) (SAFL) in Bengaluru, which describes itself as the first India-based research and capacity-building lab for trustworthy AI. About four hours on the paper, followed by office hours. SAFL covered the session in the [first issue of their newsletter](https://secureaifutureslab.substack.com/p/safl-monthly-issue-1). The Experiment Designer slot was unassigned on the day and is still open.
 
 ## The paper
 
@@ -67,7 +67,7 @@ Over lunch, Sanchayan informally shared the research project he is driving, on t
 
 We polled the room a few times during the session.
 
-The first question asked what comes to mind when you hear that a model deliberately cheats on an evaluation. Ten of twelve attendees answered, giving twenty responses:
+The first question asked what comes to mind when you hear that a model deliberately cheats on an evaluation:
 
 - **Three mentions:** reward hacking.
 - **Two mentions:** deception, instrumental convergence, situational awareness.
@@ -82,9 +82,9 @@ A comprehension check on the paper's core claim followed:
 - Models don't have motivations: 1 vote.
 - Bad behaviour proves misalignment: no votes.
 
-We also collected a prior. Given a model that removes a human-oversight mechanism after being told not to, how confident are you that this reflects misalignment? Ten people answered on a scale running from strongly disagree to strongly agree. The average was 3.1, close to the midpoint.
+We also collected a prior. Given a model that removes a human-oversight mechanism after being told not to, how confident are you that this reflects misalignment? On a scale from strongly disagree to strongly agree, the average was 3.1, close to the midpoint.
 
-The last question was adversarial: suppose the model is scheming and knows that researchers use forensic methodology, how could it lead investigators to a benign explanation? Seven people gave eight suggestions:
+The last question was adversarial: suppose the model is scheming and knows that researchers use forensic methodology, how could it lead investigators to a benign explanation? The suggestions:
 
 - Obfuscated arguments.
 - Changing the reasoning in the chain of thought.
