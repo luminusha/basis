@@ -110,13 +110,17 @@ const json = JSON.stringify(elements);
           radius,
         };
       } else if (nodeCount > 25) {
+        // Band weights on a log2 scale so each ring holds a tier of
+        // similar importance: {1}, {2-3}, {4-7}, {8-15}, ... Banding on
+        // raw weight put each of the top hubs on its own one-node ring,
+        // which stacked them in a vertical line through the centre.
         layout = {
           name: 'concentric',
           animate: false,
           padding: 40,
-          minNodeSpacing: 28,
-          concentric: (n: any) => n.data('weight') || 1,
-          levelWidth: () => 2,
+          minNodeSpacing: 50,
+          concentric: (n: any) => Math.ceil(Math.log2((n.data('weight') || 1) + 1)),
+          levelWidth: () => 1,
           spacingFactor: 1.1,
         };
       } else {
@@ -186,6 +190,32 @@ const json = JSON.stringify(elements);
               'text-border-width': 1,
             },
           },
+          // Hover states. On node hover, the hovered node and its
+          // neighbourhood get .hot and everything else gets .faded, so
+          // you can see what a concept co-occurs with.
+          {
+            selector: '.faded',
+            style: { opacity: 0.12 },
+          },
+          {
+            selector: 'node.hot',
+            style: {
+              'background-color': '#a65e2e',
+              'border-color': '#a65e2e',
+              color: '#1a1714',
+              'font-weight': 600,
+              'z-index': 999,
+            },
+          },
+          {
+            selector: 'edge.hot',
+            style: {
+              'line-color': '#7e441f',
+              opacity: 0.9,
+              width: 'mapData(weight, 1, 6, 2.5, 4.5)',
+              'z-index': 998,
+            },
+          },
         ],
         layout,
         wheelSensitivity: 0.2,
@@ -209,41 +239,48 @@ const json = JSON.stringify(elements);
       const ro = new ResizeObserver(fit);
       ro.observe(el);
 
+      // A node is clickable only if the page has a link for it (the
+      // papers list renders one per paper; concept tags have none).
+      const linkFor = (id: string) =>
+        document.querySelector<HTMLAnchorElement>(`a[data-paper-slug="${id}"]`);
+
       cy.on('mouseover', 'node', (e) => {
-        e.target.style({
-          'background-color': '#a65e2e',
-          'border-color': '#a65e2e',
-          color: '#1a1714',
-          'font-weight': 600,
-          label: e.target.data('fullLabel'),
-          'z-index': 999,
-        });
-        el.style.cursor = 'pointer';
+        const n = e.target;
+        const hood = n.closedNeighborhood();
+        cy.elements().not(hood).addClass('faded');
+        hood.addClass('hot');
+        n.style({ label: n.data('fullLabel') });
+        el.style.cursor = linkFor(n.id()) ? 'pointer' : 'default';
       });
       cy.on('mouseout', 'node', (e) => {
+        cy.elements().removeClass('faded hot');
         e.target.removeStyle();
         el.style.cursor = '';
       });
       cy.on('tap', 'node', (e) => {
-        const id = e.target.id();
-        const link = document.querySelector<HTMLAnchorElement>(`a[data-paper-slug="${id}"]`);
+        const link = linkFor(e.target.id());
         if (link?.href) window.location.href = link.href;
       });
 
+      // Edge hover: the papers graph shows the tags two papers share; the
+      // concept graph shows how many times two concepts co-occurred.
       cy.on('mouseover', 'edge', (e) => {
-        const tags = e.target.data('sharedTags') as string[] | undefined;
-        if (!tags || tags.length === 0) return;
-        e.target.style({
-          label: tags.join('  ·  '),
-          'line-color': '#7e441f',
-          opacity: 0.9,
+        const edge = e.target;
+        const tags = edge.data('sharedTags') as string[] | undefined;
+        const w = edge.data('weight') || 1;
+        const label =
+          tags && tags.length > 0
+            ? tags.join('  ·  ')
+            : `${w} co-occurrence${w === 1 ? '' : 's'}`;
+        edge.addClass('hot');
+        edge.style({
+          label,
           'text-background-opacity': 1,
           'text-border-opacity': 1,
-          width: 'mapData(weight, 1, 6, 2.5, 4.5)',
-          'z-index': 998,
         });
       });
       cy.on('mouseout', 'edge', (e) => {
+        e.target.removeClass('hot');
         e.target.removeStyle();
       });
     });
