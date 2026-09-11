@@ -131,6 +131,9 @@ const json = JSON.stringify(elements);
             style: {
               'background-color': '#1a1714',
               label: 'data(label)',
+              // Make the label text itself hoverable and clickable, not
+              // just the dot. Cytoscape defaults this to 'no'.
+              'text-events': 'yes',
               color: '#3a322a',
               'font-family': 'Inter, sans-serif',
               'font-size': small ? 22 : 16,
