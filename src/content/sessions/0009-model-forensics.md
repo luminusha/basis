@@ -19,7 +19,7 @@ bridgesTo: ["assistant-axis", "reasoning-faithfulness"]
 summary: "Detecting concerning behaviour does not establish misalignment. The paper proposes a protocol for investigating what drove the behaviour."
 ---
 
-Hosted at the [Secure AI Futures Lab](https://secureaifutureslab.substack.com/) (SAFL) in Bengaluru, which describes itself as the first India-based research and capacity-building lab for trustworthy AI. About four hours on the paper, followed by office hours. SAFL covered the session in the [first issue of their newsletter](https://secureaifutureslab.substack.com/p/safl-monthly-issue-1). The Experiment Designer slot was unassigned on the day and is still open.
+Hosted at the [Secure AI Futures Lab](https://secureaifutureslab.substack.com/) (SAFL) in Bengaluru. SAFL covered the session in the [first issue of their newsletter](https://secureaifutureslab.substack.com/p/safl-monthly-issue-1).
 
 ## The paper
 
