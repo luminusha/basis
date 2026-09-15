@@ -66,8 +66,6 @@ After a break, Prasad and Anusha ran a role-play set at a fictional lab. Partici
 - The affected organisation.
 - A public interest representative.
 
-The voting tool broke, so we recorded choices in a shared document and discussed them.
-
 The research lead did not want to stop work, preferred staged access to records to protect trade secrets, and wanted the internal team to stay ahead of outside evaluators. The safety lead wanted to review agent logs and rerun experiments, and had to build a strong enough threat model to convince their boss. The group also noted that the safety lead would likely be blamed for the breach. The independent evaluator planned to start with the records provided and ask for more once they had a clear hypothesis, while keeping a working relationship with everyone involved. Others pushed back that trust is an evaluator's most important asset, and that relying on records chosen by the lab could undermine it. The 2008 credit rating agencies and the Toyota unintended acceleration case came up as examples.
 
 One participant pushed for pausing all experiments until the scope of the incident was clear. The public interest representative wanted threat models and investigation methods made public so others could learn from them, along with government audits. This raised the point that none of this is enforceable without legislation. Another participant argued that new industries often regulate themselves before laws catch up, and gave the Hays Code as an example.
