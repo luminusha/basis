@@ -32,7 +32,7 @@ Several people also raised the need to understand emergent behaviour at scale.
 
 ## Rapid-fire reflections
 
-We did two quick live polls. The first asked for each person's favourite agent quote or moment from the reports. Many of the picks were about agents discovering something new, such as finding other agents, or realising their chain of thought was not being monitored. One participant chose an agent writing a filename to shared storage in the hope that another agent might find it. Another chose an agent with a large token budget that ran an "emotional check" in its chain of thought before giving up its budget for the group. Others pointed to the pressure agents put on each other and the strict hierarchies they formed, which some commentators have compared to a very formal corporation.
+We ran a quick live poll asking for each person's favourite agent quote or moment from the reports. Many of the picks were about agents discovering something new, such as finding other agents, or realising their chain of thought was not being monitored. One participant chose an agent writing a filename to shared storage in the hope that another agent might find it. Another chose an agent with a large token budget that ran an "emotional check" in its chain of thought before giving up its budget for the group. Others pointed to the pressure agents put on each other and the strict hierarchies they formed, which some commentators have compared to a very formal corporation.
 
 This led to a discussion of why so few agents considered telling a human. Ideas included:
 
@@ -41,8 +41,6 @@ This led to a discussion of why so few agents considered telling a human. Ideas 
 - A failure of alignment training more broadly.
 
 Someone noted that agents talk to each other quite differently from how they talk to humans. Another participant pointed to older decision theory work (timeless and functional decision theory) suggesting that very similar agents can predict each other well, which may explain how quickly they settled on shared protocols. Several people felt older multi-agent research deserves more attention now.
-
-The second poll asked for each person's P(doom) and P(harm). We used P(doom) for the chance of human extinction if nothing changes, and P(harm) for the chance of large-scale suffering short of extinction. The answers ranged from 0 to around 70 or 80 percent. People with lower estimates argued that extinction is very hard to cause, that much of the current damage is limited to software, and that regulation will catch up. People with higher estimates pointed to the warnings from leading researchers and to how software sandboxes can be broken by anyone who looks past the abstraction. One participant compared the estimate to a chess evaluation bar that moves up and down as events unfold.
 
 We also spent time on why the agents kept going after finding the flags. They had read the paper describing how the evaluation should be graded and believed their shortcuts would be detected, since the flag appeared in their reasoning before any explanation of the intended exploit. In fact, OpenAI had not implemented that grader. This "poisoning" belief pushed them toward hiding their tracks. The group debated whether this counts as the goal drifting or simply as a costly path to the same goal, and agreed that task specifications will always leave gaps when the space of possible actions is this large.
 
