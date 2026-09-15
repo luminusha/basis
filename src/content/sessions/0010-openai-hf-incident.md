@@ -87,4 +87,4 @@ A key research question came out of this: at what scale do these behaviours actu
 
 ## Afterwards
 
-A few people stayed on to talk about cost as a limit on attackers, the need for more fundamental alignment work, and the risk of power concentrating in a small number of companies. Participants agreed to share relevant papers in our group chat, including work on decision theory, emergence and moral alignment training. This was our first session with structured interactive tools, and we plan to meet in person next time.
+A few people stayed on to talk about cost as a limit on attackers, the need for more fundamental alignment work, and the risk of power concentrating in a small number of companies. Participants agreed to share relevant papers in our group chat, including work on decision theory, emergence and moral alignment training. This was our first session with structured interactive tools, and it was appreciated by the group.
