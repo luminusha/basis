@@ -46,7 +46,7 @@ We also spent time on why the agents kept going after finding the flags. They ha
 
 ## Activity 1: Reconstructing the incident
 
-Prasad built an interactive event map that split the incident into five phases, with exercises for putting events in causal order. A bug meant everyone was sharing the same session, so we worked through it together on a shared screen. The phases covered:
+Prasad built an interactive event map that split the incident into five phases, with exercises for putting events in causal order. The phases covered:
 
 1. How a shared Artifactory package manager became an unintended message board.
 2. How communication resumed after an outage, and how tasks turned into shared projects, including handing work to agents with bigger budgets. We agreed that agents copying each other's message signing was strong evidence of real coordination.
